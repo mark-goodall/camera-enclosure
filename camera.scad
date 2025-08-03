@@ -4,7 +4,7 @@ width=38;
 height=38;
 depth=32;
 
-thickness=1.5;
+thickness=6;
 
 module usbc() {
     cube([10, 4.5, 10]);
@@ -17,14 +17,14 @@ module hdmi() {
 module lens_mount() {
     cylinder(r=7.5, h=20);
     translate([-8, -8, 0]) {
-            cube([16, 16, 3]);
+            cube([16, 16, 5]);
     }
     translate([-22/2, -2, 0]) {
-            cube([22, 4, 3]);
+            cube([22, 4, 5]);
     }
     translate([2, -22/2, 0]) {
         rotate([0, 0, 90]) {
-            cube([22, 4, 3]);
+            cube([22, 4, 5]);
         }
     }
 }
@@ -64,7 +64,7 @@ module tripod_mount() {
             cylinder(12, 3.5, 3.5);
         }
         translate([8, 8, 0]) {
-            cylinder(1, 4, 3.5);
+            cylinder(2, 4.2, 4.0);
         }
     }
 }
@@ -94,12 +94,12 @@ module casing() {
     };
 }
 
-clip_width = 5;
+clip_width = 8;
 clip_length = 10;
-clip_thickness = thickness;;
-clip_arm_width = 1.5;
+clip_thickness = thickness/2;
+clip_arm_width = 2.5;
 clip_body_length = 0;
-tab_protrusion = 0.8;
+tab_protrusion = 0.6;
 clip_male_female_delta = 0.25;
 
 module back() {
@@ -121,21 +121,15 @@ module back() {
 
 module front() {
         difference() {
-                translate([8, 8, 0]) {
-            cylinder(8, 3, 3);
-        }    union() {
+        //        translate([8, 8, 0]) {
+        //    cylinder(8, 3, 3);
+        //}
+            union() {
                 difference() {
                     casing();                
                     translate([-box_width, -box_height, -box_depth/2]) {
                         cube([box_width*3, box_height*3, box_depth]);
                     }
-                }
-                translate([-thickness, box_height/2 - 5, box_depth/2]) {
-                    cube([thickness, 10, box_depth/2]);
-                }
-
-                translate([box_width, box_height/2 - 5, box_depth/2]) {
-                    cube([thickness, 10, box_depth/2]);
                 }
 
                 translate([box_width/2-8,-14,box_depth]) {
@@ -159,11 +153,11 @@ module front() {
         }
 }
 
-module explode(distance = [0, 0, $t* 10], center = false, enable = true) {
+module explode(distance = [0, 0, $t* 30], center = false, enable = true) {
     if(enable){
         offset = center ? (($children * distance) / 2 - distance / 2) * -1 : [0, 0 , 0];
         for(i = [0 : 1 : $children - 1]) {
-            translate(i * distance + offset) {
+            translate(-i * distance + offset) {
                 children(i);
             }
         }
@@ -173,6 +167,6 @@ module explode(distance = [0, 0, $t* 10], center = false, enable = true) {
 }
 
 explode() {
-    //front();
+    front();
     back();
 };
